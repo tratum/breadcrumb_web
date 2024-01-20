@@ -1,6 +1,6 @@
 # breadcrumb_web
 
-![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)
+![GitHub license](https://img.shields.io/badge/license-Unlicense-blue.svg)
 ![Pub Version](https://img.shields.io/pub/v/breadcrumbs_web.svg)
 
 A Flutter package for creating responsive and customizable breadcrumb widgets, ideal for web applications. `breadcrumb_web` offers an easy way to display a navigation trail for users and enhance their browsing experience in Flutter web projects.
@@ -110,5 +110,5 @@ Contributions are welcome! If you have a feature request or bug report, please o
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the Unlicense - see the LICENSE file for details.
 
