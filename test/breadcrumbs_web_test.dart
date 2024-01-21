@@ -4,7 +4,9 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('BreadcrumbTrail Widget Tests', () {
-    testWidgets('BreadcrumbTrail.getCrumbsForWeb creates the correct widget tree', (WidgetTester tester) async {
+    testWidgets(
+        'BreadcrumbTrail.getCrumbsForWeb creates the correct widget tree',
+        (WidgetTester tester) async {
       // Arrange
       bool homeClicked = false;
       bool categoryClicked = false;
@@ -12,9 +14,16 @@ void main() {
 
       final List<String> crumbs = ['Home', 'Category', 'Item'];
       final List<Future<dynamic> Function()> callbacks = [
-            () async => homeClicked = true,
-            () async => categoryClicked = true,
-            () async => itemClicked = true,
+        () async => homeClicked = true,
+        () async => categoryClicked = true,
+        () async => itemClicked = true,
+      ];
+
+      // New part for breadcrumb states
+      final List<BreadcrumbState> breadcrumbStates = [
+        BreadcrumbState.active,
+        BreadcrumbState.completed,
+        BreadcrumbState.disabled,
       ];
 
       // Act
@@ -24,12 +33,18 @@ void main() {
             body: BreadcrumbTrail.getCrumbsForWeb(
               crumbs: crumbs,
               callbacks: callbacks,
+              breadcrumbStates: breadcrumbStates,
+
+              /// Optional: Add custom colors for testing
+              activeStateColor: Colors.blue,
+              completedStateColor: Colors.green,
+              disabledStateColor: Colors.grey,
             ),
           ),
         ),
       );
 
-      /// Assert initial state
+      // Assert initial state
       expect(find.text('Home'), findsOneWidget);
       expect(find.text('Category'), findsOneWidget);
       expect(find.text('Item'), findsOneWidget);
@@ -37,7 +52,7 @@ void main() {
       expect(categoryClicked, isFalse);
       expect(itemClicked, isFalse);
 
-      /// Tap on the first breadcrumb and check if callback is executed
+      /// Tap on the first breadcrumb and check if the callback is executed
       await tester.tap(find.text('Home'));
       await tester.pumpAndSettle();
       expect(homeClicked, isTrue);
@@ -52,7 +67,8 @@ void main() {
       expect(itemClicked, isTrue);
     });
 
-    testWidgets('BreadcrumbTrail handles empty lists', (WidgetTester tester) async {
+    testWidgets('BreadcrumbTrail handles empty lists',
+        (WidgetTester tester) async {
       // Arrange
       final List<String> crumbs = [];
       final List<Future<dynamic> Function()> callbacks = [];
@@ -64,6 +80,7 @@ void main() {
             body: BreadcrumbTrail.getCrumbsForWeb(
               crumbs: crumbs,
               callbacks: callbacks,
+              breadcrumbStates: [],
             ),
           ),
         ),
@@ -73,44 +90,19 @@ void main() {
       expect(find.byType(Text), findsNothing);
     });
 
-    // testWidgets('BreadcrumbTrail handles disabled breadcrumbs', (WidgetTester tester) async {
-    //   // Arrange
-    //   final List<String> crumbs = ['Home', 'Category', 'Item'];
-    //   bool itemClicked = false;
-    //
-    //   final List<Future<dynamic> Function()> callbacks = [
-    //         () async => print('Home clicked'),
-    //         () async => print('Category clicked'),
-    //         () async => itemClicked = true, // This breadcrumb is effectively 'disabled'
-    //   ];
-    //
-    //   // Act
-    //   await tester.pumpWidget(
-    //     MaterialApp(
-    //       home: Scaffold(
-    //         body: BreadcrumbTrail.getCrumbsForWeb(
-    //           crumbs: crumbs,
-    //           callbacks: callbacks,
-    //         ),
-    //       ),
-    //     ),
-    //   );
-    //
-    //   /// Attempt to tap on the 'disabled' breadcrumb
-    //   await tester.tap(find.text('Item'));
-    //   await tester.pumpAndSettle();
-    //
-    //   /// Assert that the callback is not executed
-    //   expect(itemClicked, isFalse);
-    // });
-
-    testWidgets('BreadcrumbTrail handles breadcrumbs with long text', (WidgetTester tester) async {
+    testWidgets('BreadcrumbTrail displays correct colors for different states',
+        (WidgetTester tester) async {
       // Arrange
-      final List<String> crumbs = ['This is a very long breadcrumb', 'Category', 'Item'];
+      final List<String> crumbs = ['Home', 'Category', 'Item'];
       final List<Future<dynamic> Function()> callbacks = [
-            () async => print('Home clicked'),
-            () async => print('Category clicked'),
-            () async => print('Item clicked'),
+        () async => print('Home clicked'),
+        () async => print('Category clicked'),
+        () async => print('Item clicked'),
+      ];
+      final List<BreadcrumbState> breadcrumbStates = [
+        BreadcrumbState.active,
+        BreadcrumbState.completed,
+        BreadcrumbState.disabled,
       ];
 
       // Act
@@ -120,18 +112,66 @@ void main() {
             body: BreadcrumbTrail.getCrumbsForWeb(
               crumbs: crumbs,
               callbacks: callbacks,
+              breadcrumbStates: breadcrumbStates,
+              activeStateColor: Colors.blue,
+              completedStateColor: Colors.green,
+              disabledStateColor: Colors.grey,
+            ),
+          ),
+        ),
+      );
+
+      // Assert
+      final Finder homeCrumb = find.text('Home');
+      final Finder categoryCrumb = find.text('Category');
+      final Finder itemCrumb = find.text('Item');
+
+      /// Check color of each breadcrumb based on its state
+      expect((tester.widget(homeCrumb) as Text).style?.color,
+          Colors.blue); // Active
+      expect((tester.widget(categoryCrumb) as Text).style?.color,
+          Colors.green); // Completed
+      expect((tester.widget(itemCrumb) as Text).style?.color,
+          Colors.grey); // Disabled
+    });
+
+    testWidgets('BreadcrumbTrail handles breadcrumbs with long text',
+        (WidgetTester tester) async {
+      // Arrange
+      final List<String> crumbs = [
+        'This is a very long breadcrumb',
+        'Category',
+        'Item'
+      ];
+      final List<Future<dynamic> Function()> callbacks = [
+        () async => print('Home clicked'),
+        () async => print('Category clicked'),
+        () async => print('Item clicked'),
+      ];
+
+      // Act
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: BreadcrumbTrail.getCrumbsForWeb(
+              crumbs: crumbs,
+              callbacks: callbacks,
+              breadcrumbStates:
+                  List.generate(crumbs.length, (_) => BreadcrumbState.active),
             ),
           ),
         ),
       );
     });
 
-    testWidgets('BreadcrumbTrail handles a large number of breadcrumbs', (WidgetTester tester) async {
+    testWidgets('BreadcrumbTrail handles a large number of breadcrumbs',
+        (WidgetTester tester) async {
       // Arrange
-      final List<String> crumbs = List.generate(100, (index) => 'Breadcrumb $index');
+      final List<String> crumbs =
+          List.generate(100, (index) => 'Breadcrumb $index');
       final List<Future<dynamic> Function()> callbacks = List.generate(
         100,
-            (index) => () async => print('Clicked on Breadcrumb $index'),
+        (index) => () async => print('Clicked on Breadcrumb $index'),
       );
 
       // Act
@@ -141,6 +181,8 @@ void main() {
             body: BreadcrumbTrail.getCrumbsForWeb(
               crumbs: crumbs,
               callbacks: callbacks,
+              breadcrumbStates:
+                  List.generate(crumbs.length, (_) => BreadcrumbState.active),
             ),
           ),
         ),

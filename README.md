@@ -3,7 +3,9 @@
 ![GitHub license](https://img.shields.io/badge/license-Unlicense-blue.svg)
 ![Pub Version](https://img.shields.io/pub/v/breadcrumbs_web.svg)
 
-A Flutter package for creating responsive and customizable breadcrumb widgets, ideal for web applications. `breadcrumb_web` offers an easy way to display a navigation trail for users and enhance their browsing experience in Flutter web projects.
+A Flutter package for creating responsive and customizable breadcrumb widgets, ideal for web
+applications. `breadcrumb_web` offers an easy way to display a navigation trail for users and
+enhance their browsing experience in Flutter web projects.
 
 ## Features
 
@@ -106,7 +108,8 @@ class MyApp extends StatelessWidget {
 
 ## Contributing
 
-Contributions are welcome! If you have a feature request or bug report, please open an issue on our GitHub repository.
+Contributions are welcome! If you have a feature request or bug report, please open an issue on our
+GitHub repository.
 
 ## License
 
