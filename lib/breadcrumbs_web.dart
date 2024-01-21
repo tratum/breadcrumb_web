@@ -34,7 +34,7 @@ class BreadcrumbTrail {
           crumbs.length == breadcrumbStates.length,
       'Lists of crumbs, callbacks, and breadcrumb states must be of the same length.',
     );
-    final bool useCrumbSeperator = crumbSeparator != null;
+    final bool crumbSeperatorUsage = crumbSeparator != null;  // checks if crumbSeperator is used or not
     return Wrap(
       spacing: crumbSpacing,
       children: List.generate(crumbs.length, (index) {
@@ -44,13 +44,13 @@ class BreadcrumbTrail {
         return Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            if (index != 0 && !useCrumbSeperator)
+            if (index != 0 && !crumbSeperatorUsage)
               Icon(
                 crumbIcon,
                 size: crumbIconSize,
                 color: crumbIconColor,
               ),
-            if (index != 0 && useCrumbSeperator)
+            if (index != 0 && crumbSeperatorUsage)
               crumbSeparator,
             SizedBox(width: crumbSpacing),
             GestureDetector(
