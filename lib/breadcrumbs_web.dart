@@ -25,9 +25,9 @@ class BreadcrumbTrail {
     IconData crumbIcon = Icons.arrow_forward_ios_sharp,
     double crumbIconSize = 14,
     Color crumbIconColor = const Color(0xff121212),
-    Color activeStateColor = Colors.blue,
-    Color completedStateColor = Colors.green,
-    Color disabledStateColor = Colors.grey,
+    Color activeStateColor = const Color(0XFF2196F3),
+    Color completedStateColor = const Color(0XFF4CAF50),
+    Color disabledStateColor = const Color(0XFF9E9E9E),
   }) {
     assert(
       crumbs.length == callbacks.length &&
